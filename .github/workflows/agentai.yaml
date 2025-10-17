@@ -1,0 +1,31 @@
+name: agentai
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          if test -f package-lock.json; then npm ci; else npm install; fi
+
+      - name: Run tests
+        run: |
+          if npm run | grep -q " test"; then npm test; else echo 'No test script defined'; fi
+
+      - name: Build (if present)
+        run: |
+          if npm run | grep -q " build"; then npm run build; else echo 'No build script defined'; fi
+
+      - name: AgentAI placeholder step
+        run: echo 'AgentAI workflow created'
